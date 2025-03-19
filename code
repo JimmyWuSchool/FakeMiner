@@ -1,0 +1,39 @@
+# Function to generate a random 50-character long base64 number
+function Generate-RandomBase64Number {
+    # Generate a 38-byte random number (to ensure enough entropy for 50 characters)
+    $bytes = New-Object byte[] 38
+    [System.Security.Cryptography.RandomNumberGenerator]::Create().GetBytes($bytes)
+    
+    # Convert to Base64 string and trim to 50 characters
+    $base64String = [Convert]::ToBase64String($bytes).TrimEnd('=').Substring(0, 50)
+    
+    return $base64String
+}
+
+# Function to print time and random base64 number in one line
+function Print-TimeAndRandomColor {
+    $colors = @("Red", "Green", "Red", "Red", "Red", "Red", "Red", "Red", "Red", "Red", "Red", "Red")
+    
+    while ($true) {
+        # Get the current time
+        $currentTime = Get-Date -Format "HH:mm:ss"
+        
+        # Generate a random base64 number
+        $randomNumber = Generate-RandomBase64Number
+        
+        # Choose a random color for the base64 number
+        $color = Get-Random -InputObject $colors
+        
+        # Print the current time in white
+        Write-Host -NoNewline "$currentTime - " -ForegroundColor White
+        
+        # Print the random base64 number in the chosen color
+        Write-Host $randomNumber -ForegroundColor $color
+        
+        # Wait for 10 milliseconds
+        Start-Sleep -Milliseconds 100
+    }
+}
+
+# Start printing time and random numbers in one line
+Print-TimeAndRandomColor
